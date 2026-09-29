@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed, watch } from 'vue'
 import { categories } from '@/constants/categories'
+import ExpenseAlert from './ExpenseAlert.vue'
 
 const expenses = ref([])
 const id = ref(1)
@@ -11,8 +12,12 @@ const form = reactive({
   category: '',
 })
 
+// 支出が５万円を超えるかを見張る
 const isOver50kNotified = ref(false)
+// アラートの表示　非表示の状態
+const isExpenseAlertVisible = ref(false)
 
+// 支出の登録
 function registerExpense() {
   // 日付
   if (!form.date) {
@@ -63,8 +68,8 @@ const totalThisMonthAmount = computed(() => {
 
 // 今月の支出が５万円を超えたらお知らせする
 watch(totalThisMonthAmount, (newAmount) => {
-  if (isOver50kNotified.value === false && newAmount > 50000) {
-    console.log('今月の支出が5万円を超えました')
+  if (isOver50kNotified.value === false && newAmount >= 50000) {
+    isExpenseAlertVisible.value = true
     isOver50kNotified.value = true
   }
 })
@@ -75,6 +80,10 @@ function getCategoryLabel(value) {
   })
 
   return category?.label ?? '未分類'
+}
+
+function closeNoticePanel() {
+  isExpenseAlertVisible.value = false
 }
 </script>
 <template>
@@ -111,6 +120,7 @@ function getCategoryLabel(value) {
   <hr />
 
   <h2>今月の支出{{ totalThisMonthAmount }}円</h2>
+  <ExpenseAlert v-show="isExpenseAlertVisible" @close-notice="closeNoticePanel" />
   <table border="2">
     <tr>
       <th>日付</th>
