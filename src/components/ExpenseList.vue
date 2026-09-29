@@ -14,7 +14,7 @@ const form = reactive({
 
 // 支出が５万円を超えるかを見張る
 const isOver50kNotified = ref(false)
-// アラートの表示　非表示の状態
+// アラートの表示・非表示の状態
 const isExpenseAlertVisible = ref(false)
 
 // 支出の登録
