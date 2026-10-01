@@ -1,21 +1,33 @@
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { categories } from '@/constants/categories'
 import ExpenseAlert from './ExpenseAlert.vue'
+import { useExpenseTotal } from '@/composables/useExpenseTotal'
+import { useExpenseAlert } from '@/composables/useExpenseAlert'
 
 const expenses = ref([])
+
+const { totalAmount, totalThisMonthAmount } = useExpenseTotal(expenses)
+
 const id = ref(1)
+
 const form = reactive({
   date: '',
   title: '',
   amount: '',
   category: '',
 })
+// 通知するかどうか
+const shouldNotify = ref(false)
 
-// 支出が５万円を超えるかを見張る
-const isOver50kNotified = ref(false)
-// アラートの表示・非表示の状態
-const isExpenseAlertVisible = ref(false)
+onMounted(() => {
+  shouldNotify.value = confirm('5万円を超えたら通知しますか？')
+})
+
+// 5万円を超えた時の通知処理
+const { isExpenseAlertVisible } = useExpenseAlert(totalThisMonthAmount, shouldNotify)
+
+const alertMessage = '今月の支出が５万円を超えました'
 
 // 支出の登録
 function registerExpense() {
@@ -53,26 +65,6 @@ function registerExpense() {
   form.amount = ''
   form.category = ''
 }
-const totalAmount = computed(() => {
-  return expenses.value.reduce((total, expense) => {
-    return total + Number(expense.amount)
-  }, 0)
-})
-
-const totalThisMonthAmount = computed(() => {
-  const thisMonth = new Date().toISOString().slice(0, 7)
-  return expenses.value.reduce((total, expense) => {
-    return thisMonth === expense.date.slice(0, 7) ? total + Number(expense.amount) : total
-  }, 0)
-})
-
-// 今月の支出が５万円を超えたらお知らせする
-watch(totalThisMonthAmount, (newAmount) => {
-  if (isOver50kNotified.value === false && newAmount >= 50000) {
-    isExpenseAlertVisible.value = true
-    isOver50kNotified.value = true
-  }
-})
 
 function getCategoryLabel(value) {
   const category = categories.find((category) => {
@@ -119,8 +111,12 @@ function closeNoticePanel() {
   </form>
   <hr />
 
-  <h2>今月の支出{{ totalThisMonthAmount }}円</h2>
-  <ExpenseAlert v-show="isExpenseAlertVisible" @close-notice="closeNoticePanel" />
+  <h2>今月の支出:{{ totalThisMonthAmount }}円</h2>
+  <ExpenseAlert
+    v-show="isExpenseAlertVisible"
+    :message="alertMessage"
+    @close-notice="closeNoticePanel"
+  />
   <table border="2">
     <tr>
       <th>日付</th>

@@ -1,7 +1,18 @@
-<script setup></script>
+<script setup>
+const props = defineProps({
+  message: String,
+})
+</script>
 <template>
-  <div>
+  <div class="message">
     <button @click="$emit('closeNotice')">x</button>
-    <p>今月の支出が5万円を超えました</p>
+    <p class="text-center">{{ props.message }}</p>
   </div>
 </template>
+<style scoped>
+.message {
+  background-color: powderblue;
+  border-radius: 10px;
+  width: 500px;
+}
+</style>
