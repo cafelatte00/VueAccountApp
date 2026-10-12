@@ -1,3 +1,5 @@
+<img width="642" height="564" alt="スクリーンショット 2026-10-12 22 11 46" src="https://github.com/user-attachments/assets/13950ee0-9475-44c3-9777-d79fc7d471be" />
+
 # account_book
 
 This template should help get you started developing with Vue 3 in Vite.
