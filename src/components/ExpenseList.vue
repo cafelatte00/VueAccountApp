@@ -118,18 +118,22 @@ function closeNoticePanel() {
     @close-notice="closeNoticePanel"
   />
   <table border="2">
-    <tr>
-      <th>日付</th>
-      <th>内容</th>
-      <th>金額</th>
-      <th>分類</th>
-    </tr>
-    <tr v-for="expense in expenses" :key="expense.id">
-      <td>{{ expense.date }}</td>
-      <td>{{ expense.title }}</td>
-      <td>{{ expense.amount }}円</td>
-      <td>{{ getCategoryLabel(expense.category) }}</td>
-    </tr>
+    <thead>
+      <tr>
+        <th>日付</th>
+        <th>内容</th>
+        <th>金額</th>
+        <th>分類</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="expense in expenses" :key="expense.id">
+        <td>{{ expense.date }}</td>
+        <td>{{ expense.title }}</td>
+        <td>{{ expense.amount }}円</td>
+        <td>{{ getCategoryLabel(expense.category) }}</td>
+      </tr>
+    </tbody>
   </table>
   <h3>合計{{ totalAmount }}円</h3>
 </template>

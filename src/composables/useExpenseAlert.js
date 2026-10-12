@@ -1,4 +1,4 @@
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch } from 'vue'
 
 export function useExpenseAlert(totalThisMonthAmount, shouldNotify) {
   // 支出が５万円以上のアラートを表示しているか
