@@ -1,6 +1,9 @@
 <script setup>
 const props = defineProps({
-  message: String,
+  message: {
+    type: String,
+    default: '支出が一体の値を超えました',
+  },
 })
 </script>
 <template>
